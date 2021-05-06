@@ -7,7 +7,7 @@ export const FlexGrid = styled.div`
 `;
 
 export const SearchCard = styled.div`
-  width: 300px;
+  width: 240px;
   height: 100%;
   margin: 0 15px 40px;
 

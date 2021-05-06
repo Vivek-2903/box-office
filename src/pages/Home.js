@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { ActorGrid } from '../components/actors/ActorGrid';
 import MainPageLayout from '../components/MainPageLayout';
