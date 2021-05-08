@@ -1,7 +1,13 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
 import React, { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
+import Cast from '../components/shows/Cast';
+import Details from '../components/shows/Details';
+import Seasons from '../components/shows/Seasons';
+import ShowMainData from '../components/shows/ShowMainData';
 import { apiGet } from '../misc/config';
+import { InfoBlock, ShowPageWrapper } from './Show.styled';
 
 const reducer = (prevState, action) => {
   switch (action.type) {
@@ -27,9 +33,11 @@ const initialState = {
 const Show = () => {
   const { id } = useParams();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ show, isLoading, error }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
-  console.log('state', state);
   useEffect(() => {
     let isMounted = true;
 
@@ -50,16 +58,42 @@ const Show = () => {
     };
   }, [id]);
 
-  //   console.log('show', show);
+  if (isLoading) {
+    return <div>Data is being loaded</div>;
+  }
+  if (error) {
+    return <div>Error occured: {error}</div>;
+  }
 
-  //   if (isLoading) {
-  //     return <div>Data is being loaded</div>;
-  //   }
-  //   if (error) {
-  //     return <div>Error occured: {error}</div>;
-  //   }
+  return (
+    <ShowPageWrapper>
+      <ShowMainData
+        image={show.image}
+        name={show.name}
+        rating={show.rating}
+        summary={show.summary}
+        tags={show.genres}
+      />
+      <InfoBlock>
+        <h2>Details</h2>
+        <Details
+          status={show.status}
+          network={show.network}
+          premiered={show.premiered}
+        />
+      </InfoBlock>
 
-  return <div>This is show Page</div>;
+      <InfoBlock>
+        <h2>Seasons</h2>
+        <Seasons seasons={show._embedded.seasons} />
+      </InfoBlock>
+
+      <InfoBlock>
+        <h2>Cast</h2>
+        <Cast cast={show._embedded.cast} />
+      </InfoBlock>
+    </ShowPageWrapper>
+  );
 };
 
 export default Show;
